@@ -27,9 +27,42 @@ class Solution:
         return total_profit
 
     def dp_solution(self, prices: List[int]) -> int:
-        total_profit = 0
+        # deal with special edge cases:
+        # 1. empty list
+        # 2. only one element
+        if len(prices) == 0 or len(prices) == 1:
+            return 0
 
-        return total_profit
+        # init variables
+        min_buy_price = float("inf")
+        max_left_profit = [0]*len(prices)
+
+        max_sell_price = float("-inf")
+        max_right_profit = [0]*len(prices)
+
+        # looping from left to right
+        for i in range(len(prices)):
+            price = prices[i]
+            min_buy_price = min(min_buy_price, price)
+            # 与前一次的profit做比较
+            # 当i=0的时候，由于max_left_profit[-1]是最后一个元素，所以并不会超出范围
+            max_left_profit[i] = max(max_left_profit[i-1], price-min_buy_price)
+
+        # looping from right to left
+        for i in reversed(range(len(prices))):
+            price = prices[i]
+            max_sell_price = max(max_sell_price, price)
+            max_right_profit[i] = max(
+                max_right_profit[i-1], max_sell_price-price)
+
+        # pick the highest profit
+        max_total_profit = 0
+        for i in range(len(prices)):
+            total_profit = max_left_profit[i]+max_right_profit[i]
+            if total_profit > max_total_profit:
+                max_total_profit = total_profit
+
+        return max_total_profit
 
 
 def test_solution():
