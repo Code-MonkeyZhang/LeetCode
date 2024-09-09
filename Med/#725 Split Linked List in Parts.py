@@ -14,69 +14,35 @@ class Solution(object):
         """
         # edge cases:
         # - empty
-        # - only one element
-        # - k > length
 
-        # edge case: empty
         if head is None:
             return [None]*k
 
-        # 创建输出的结果，根据描述 一共有k个元素
-        result = [None]*k
-
-        # edge case: only 1 element
-        if head.next is None:
-            return [head]+[None]*(k-1)
-
-        # 先数len是多少
+        # count length
         iter = head
         length = 0
         while iter is not None:
             iter = iter.next
             length += 1
 
-        # edge case: k比链表的长度还长
-        # 根据问题描述，直接剁成一个个
-        if k > length:
-            iter = head
-            for i in range(len(result)):
-                if iter is not None:
-                    # 赋值
-                    result[i] = iter
-                    # 切尾
-                    temp = result[i].next
-                    result[i].next = None
-                    # 推进到下一个
-                    iter = temp
-            return result
+        size = length//k
+        remain = length % k
 
-        # split_len代表每个元素应该有的数量
-        # 举例
-        # length=9 k=3
-        # split_length=9//3=3
-        split_len = length//k
+        group_size = [size]*k
+        # assign remainder:
+        for i in range(remain):
+            group_size[i] += 1
 
-        # remainder：要多分配的个数
-        # 比如 length=10, k=3 那么 remainder=1
-        remainder = length % k
-
+        result = []
         iter = head
-        # 遍历输出中的每一个元素
-        for i in range(len(result)):
-            result[i] = iter
+        for size in group_size:
+            dummy = iter
+            for _ in range(size):
+                temp = iter
+                iter = iter.next
 
-            current_len = split_len + (1 if i < remainder else 0)
-
-            # 移动到当前部分的最后一个节点
-            for _ in range(current_len - 1):
-                if iter:
-                    iter = iter.next
-
-            # 切断链接并移动到下一部分的开始
-            if iter:
-                temp = iter.next
-                iter.next = None
-                iter = temp
+            temp.next = None
+            result.append(dummy)
 
         return result
 
