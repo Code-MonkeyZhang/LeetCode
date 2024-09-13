@@ -5,7 +5,8 @@ def bubble_sort(arr):
         # Flag to optimize the algorithm
         swapped = False
 
-        # Last i elements are already in place
+        # range 代表最后面的"墙"
+        # 每次bubble上浮的过程,都会把最大的数放在后边
         for j in range(0, n - i - 1):
             # Traverse the array from 0 to n-i-1
             # Swap if the element found is greater than the next element
