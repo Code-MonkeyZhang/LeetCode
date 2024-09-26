@@ -7,33 +7,32 @@ class ListNode:
 
 class Solution:
     def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
-
-        def getKth(cur, k):
-            while cur and k > 0:
-                cur = cur.next
-                k -= 1
-            return cur
-
         dummy = ListNode(0, head)
-        groupPrev = dummy
-
+        start = dummy
+        curr = head
+        next = curr.next
+        end = head
         while True:
-            kth = getKth(groupPrev, k)
-            if not kth:
+            for _ in range(k):
+                end = end.next
+                if end is None:
+                    break
+            if end is None:
                 break
-            groupNext = kth.next
 
-            # 反转组内节点
-            prev, curr = kth.next, groupPrev.next
-            while curr != groupNext:
-                tmp = curr.next
-                curr.next = prev
-                prev = curr
-                curr = tmp
+            for _ in range(k-1):
+                temp = next.next
+                next.next = curr
+                curr = next
+                next = temp
 
-            tmp = groupPrev.next
-            groupPrev.next = kth
-            groupPrev = tmp
+            temp = start.next
+            start.next = curr
+            temp.next = end
+            start = temp
+
+            curr = end
+            next = curr.next
 
         return dummy.next
 
@@ -63,6 +62,25 @@ if __name__ == "__main__":
     # 测试用例
     values = [1, 2, 3, 4, 5]
     k = 2
+
+    # 创建链表
+    head = create_linked_list(values)
+
+    # 打印原始链表
+    print("Original list:")
+    print_linked_list(head)
+
+    # 执行翻转
+    solution = Solution()
+    reversed_head = solution.reverseKGroup(head, k)
+
+    # 打印翻转后的链表
+    print(f"List after reversing every {k} nodes:")
+    print_linked_list(reversed_head)
+
+    # 测试用例
+    values = [1, 2, 3, 4, 5]
+    k = 3
 
     # 创建链表
     head = create_linked_list(values)
